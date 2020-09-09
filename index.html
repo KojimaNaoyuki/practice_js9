@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+
+    <style media="screen">
+      body {
+        background-color: black;
+        color: white;
+      }
+
+      /* ////////////////////////////////////////// */
+
+      .box, .box_clicked {
+        margin: 0 10px;
+        width: 100px;
+        height: 100px;
+        background-color: red;
+        float: left;
+        box-sizing: border-box;
+        border-radius: 50%;
+        color: black;
+      }
+      .box_clicked {
+        background-color: blue;
+        color: white;
+      }
+      .box p, .box_clicked p {
+        text-align: center;
+        font-weight: bold;
+        line-height: 70px;
+      }
+
+      /* ////////////////////////////////////////// */
+
+      #add_st dl dt, #add_st dl dd {
+        margin: 0 20px;
+      }
+      #add_st dl dt {
+        float: left;
+      }
+      #add_st dl dd {
+        float: left;
+      }
+
+      /* ////////////////////////////////////////// */
+
+      .big_box {
+        width: 300px;
+        height: 300px;
+        background-color: white;
+      }
+      .big_box p {
+        color: black;
+      }
+
+      /* ////////////////////////////////////////// */
+
+      #click_box, add_st {
+        margin-bottom: 50px;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>DOM操作、cssクラスの付け替え、ノードの編集</h1>
+    <section id="click_box">
+      <div class="box"><p>click!</p></div>
+      <div class="box"><p>click!</p></div>
+      <div class="box"><p>click!</p></div>
+      <div class="box"><p>click!</p></div>
+      <div class="box"><p>click!</p></div>
+      <div class="box"><p>click!</p></div>
+      <div class="box"><p>click!</p></div>
+    </section>
+
+    <section id="add_st">
+      <dl>
+        <dt>登録文字列</dt>
+        <dd><input type="text" id="input_str" value=""></dd>
+      </dl>
+      <button type="button" name="button" id="btn1">登録</button>
+      <button type="button" name="button" id="btn2">削除</button>
+
+      <ul id="result">
+      </ul>
+    </section>
+
+    <section id="mouse_get">
+      <div class="big_box" id="tg_box"><p id="tg_p"></p></div>
+    </section>
+
+    <script type="text/javascript">
+
+      //DOM操作
+
+      (function() {
+        //javascriptでcssを変更するときはcssのクラスを付け替えることで表現するのが望ましい
+
+        document.addEventListener('DOMContentLoaded', function() {
+          //ページロード時に実行される
+          let elem = document.getElementsByClassName('box'); //.boxが付いている要素が配列で渡される
+
+          for(let i = 0; i < elem.length; i++) {
+            elem[i].addEventListener('click', function() {
+              //イベントリスナー配下のthisはそのイベントが呼び出されたターゲットが入る
+              this.classList.toggle('box_clicked'); //そのクラスが付いていれば消す、ついていなければつける
+            }, false);
+          }
+
+          /////////////////////////////////////////////////////////////////
+
+          //ノードの編集
+
+          document.getElementById('btn1').addEventListener('click', function() {
+            //追加
+            let input_str = document.getElementById('input_str').value; //textボックスの値を取得
+            let result = document.getElementById('result');
+
+            let li = document.createElement('li'); //li要素を作成
+
+            let text = document.createTextNode(input_str); //textボックスの値をtextNodeに追加している
+
+            //appendChildは指定された要素を現在の最後の子要素として追加する
+            li.appendChild(text); //textノードをliに追加
+            result.appendChild(li);
+
+          }, false);
+
+          document.getElementById('btn2').addEventListener('click', function() {
+            //削除
+            let result = document.getElementById('result');
+
+            //elem.removeChild(node) 対称ノードを削除する
+            result.removeChild(result.lastChild);
+          }, false);
+
+          /////////////////////////////////////////////////////////////////
+
+          //マウス座標取得
+
+          document.getElementById('tg_box').addEventListener('mousemove', function(e) {
+            let tg = document.getElementById('tg_p');
+            console.log('offsetX : ' + e.offsetX);
+            console.log('offsetY : ' + e.offsetY);
+
+            tg.innerHTML = 'offsetX : ' + e.offsetX + ' / offsetY : ' + e.offsetY;
+          }, false);
+
+        }, false);
+
+      }).call(this);
+    </script>
+  </body>
+</html>
